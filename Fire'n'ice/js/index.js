@@ -327,21 +327,21 @@ const g = 'ground';
 // 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
 // ];
 
-// const field = [ 	//9-9
-// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-// 	[g , g , g , g , g , g , e , e , e , e , e , e , e , g , g , g],
-// 	[g , g , g , g , g , e , e , e , f , e , e , e , e , g , g , g],
-// 	[g , g , g , g , e , e , e , gR,LiR,Lg , g , m , e , g , g , g],
-// 	[g , g , g , e , e , e , g , e , p , e , g , m , e , g , g , g],
-// 	[g , g , g , e , e , g , e , e , m , e , e , m , e , g , g , g],
-// 	[g , g , g , g , e , e , gR,LiR,LgR,Li , f , g , g , g , g , g],
-// 	[g , g , g , g , g , e , e , e , g , g , g , g , g , g , g , g],
-// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-//];
+const field = [ 	//9-9
+	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+	[g , g , g , g , g , g , e , e , e , e , e , e , e , g , g , g],
+	[g , g , g , g , g , e , e , e , f , e , e , e , e , g , g , g],
+	[g , g , g , g , e , e , e , gR,LiR,Lg , g , m , e , g , g , g],
+	[g , g , g , e , e , e , g , e , p , e , g , m , e , g , g , g],
+	[g , g , g , e , e , g , e , e , m , e , e , m , e , g , g , g],
+	[g , g , g , g , e , e , gR,LiR,LgR,Li , f , g , g , g , g , g],
+	[g , g , g , g , g , e , e , e , g , g , g , g , g , g , g , g],
+	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+];
 
 // const field = [ 	//7-2
 // 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
@@ -377,22 +377,22 @@ const g = 'ground';
 // 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
 // ];
 
-const field = [ 	//JAR TESTING
-	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-	[g , e , e , e , g , e , e , g , g , e , e , e , e , g , g , g],
-	[e , e , e , e , e , e , e , e , e , e , e , e , e , e , g , g],
-	[g , g , e , e , e , g , e , e , e , e , g , e , e , e , g , g],
-	[g , e , e , e , e , e , f , e , e , e , e , e , e , e , g , g],
-	[g , g , e , e , e , gR,LiR,Lg , e , e , p , e , e , e , e , g],
-	[g , e , e , g , e , e , e , e , e , e , g , e , e , e , e , g],
-	[g , e , e , e , g , e , j , e , g , e , J , e , g , e , g , g],
-	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-];
+// const field = [ 	//JAR TESTING
+// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+// 	[g , e , e , e , g , e , e , g , g , e , e , e , e , g , g , g],
+// 	[e , e , e , e , e , e , e , e , e , e , e , e , e , e , g , g],
+// 	[g , g , e , e , e , g , e , e , e , e , g , e , e , e , g , g],
+// 	[g , e , e , e , e , e , f , e , e , e , e , e , e , e , g , g],
+// 	[g , g , e , e , e , gR,LiR,Lg , e , e , p , e , e , e , e , g],
+// 	[g , e , e , g , e , e , e , e , e , e , g , e , e , e , e , g],
+// 	[g , e , e , e , g , e , j , e , g , e , J , e , g , e , g , g],
+// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+// ];
 
 const canvas = document.getElementById('game');
 canvas.width = canvas.height = window.innerHeight - window.innerHeight%field[0].length;
@@ -822,7 +822,6 @@ function slide(){
 								field[row][column] = 'empty';
 								drawSquare(row, column);
 								engine.squaresToAnimate.splice(findIndexOf(row,column), 1);	//fire'n'ice annihilate -> cease animating recipient square as well
-								fieldUpdate(row);
 							}
 							else{
 								field[row][column] = 'metal';
@@ -835,6 +834,7 @@ function slide(){
 							break;
 			default: 1;
 		}
+		fieldUpdate(row);
 	}
 }//slide()
 
