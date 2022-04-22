@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>Fire'N'ice / Solomon's Key 2</title>
     <style type="text/css">
-      canvas { border: 1px solid black;}
+      section {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      canvas {
+        border: 1px solid black;
+      }
     </style>
   </head>
   <body>
-    <canvas id="game"></canvas>
-  <script type="text/javascript" src="js/index.js"></script>
+    <section>
+      <div style=><pre>
+        An easy one. Really.
+        Just walk left/right(ARROWS)
+        and cast the ice magic(SPACE)
+        to save Icemint Island
+        from the evil fires
+      </pre></div>
+      <canvas id="game"></canvas>
+    </section>
+
+    <script type="text/javascript" src="js/index.js"></script>
   </body>
 </html>

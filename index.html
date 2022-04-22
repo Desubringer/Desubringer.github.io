@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Event targeting test</title>
+    <style type="text/css">
+      
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <button id="redir" type="button" role="navigation">
+        launch the game
+      </button>
+    </div>
+    
+
+    <script>
+      document
+        .querySelector("#redir")
+        .addEventListener(
+          "click",
+          () => (window.location = "./Fire'n'ice/index.html")
+        );
+    </script>
+  </body>
+</html>

@@ -8,8 +8,9 @@ class Player {
 			this.frame = 0, //so we make it feel alive
 			this.frames = 8,
 			this.duck = false; //separated coz combines with this.state in terms of drawing, and doesn't deny us kb controls, unlike non-null state
-		this.image = new Image(),
+			this.image = new Image(),
 			this.image.src = 'img/dana.png';
+			this.fallSfx = undefined;
 	}
 
 	Turn() {
@@ -69,6 +70,7 @@ class Player {
 			isMetal: field[row][column] == 'metal'
 		}; //once again: sMGO.delta is +1 for right and -1 for left, the whole object being used by slide() routine
 		field[row][column] = 'empty'; //pushed square turns officially empty right off the bat
+		createSfx("push");
 	} //Player.Push()
 
 	Jump() {
@@ -76,13 +78,14 @@ class Player {
 		this.frame = 0;
 		this.frames = 5;
 		kbIgnore = true;
+		createSfx("jump");
 	} //Jump()
 
 	Fall() {
 		this.state = 'fall';
 		this.duck = false;
 		this.frame = 0
-		this.frames = 7;
+		this.frames = 5;
 		kbIgnore = true;
 	} //Fall()
 
@@ -162,10 +165,20 @@ class Player {
 					field[this.row][this.column] = 'player';
 					if (field[this.row + 1][this.column] == 'empty' ||
 						field[this.row + 1][this.column] == 'fire') {
-						this.frame = 0; //fall
-						this.frames != 5 ? this.frames-- : true; //deeper (and a bit faster)
+						this.frame = 0; // fall deeper then
+						if (!this.fallSfx){
+							this.fallSfx = createSfx("fall");
+						}
+						if(this.fallSfx.currentTime > 2.8){
+							this.fallSfx.currentTime = 2.6;
+						}	
 						return;
 					}
+					if (this.fallSfx) {
+						this.fallSfx.muted=true;
+						this.fallSfx = undefined;
+					}
+					createSfx("land");
 					fieldUpdate(this.row);
 					break;
 				case 'jump':
@@ -259,15 +272,15 @@ class Player {
 					drawSquare(this.row - 1, this.column);
 					drawSquare(this.row, this.column);
 					drawSquare(this.row + 1, this.column);
-					if (this.frames == 7)
+					if (this.frames == 6)
 						ctx.drawImage(this.image, 393 + ((this.frame > 2) && 47), 6 + this.frame % 2 * 63, 32, 52,
 							this.column * blockSize, (this.row - 0.5 + this.frame / this.frames) * blockSize, blockSize, blockSize * 1.5);
 					else
-					if (this.frames == 6)
+					if (this.frames == 5)
 						ctx.drawImage(this.image, 537, 6 + this.frame % 2 * 63, 32, 52,
 							this.column * blockSize, (this.row - 0.5 + this.frame / this.frames) * blockSize, blockSize, blockSize * 1.5);
 					else
-					if (this.frames == 5)
+					if (this.frames == 4)
 						ctx.drawImage(this.image, 488, 0 + this.frame % 2 * 64, 32, 64,
 							this.column * blockSize, (this.row - 0.7 + this.frame / this.frames) * blockSize, blockSize, blockSize * 1.7);
 					break;
@@ -398,38 +411,38 @@ const g = 'ground';
 // 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
 // ];
 
-const field = [ //6-5
-	[g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-	[g, g, g, g, g, e, e, e, e, e, e, e, g, g, g, g],
-	[g, g, g, g, e, e, e, p, e, e, e, e, e, g, g, g],
-	[g, g, g, e, e, g, g, g, g, g, g, e, e, e, g, g],
-	[g, g, e, e, g, e, e, e, e, e, e, g, e, e, g, g],
-	[g, g, e, iR, LiR, LiR, Li, e, g, e, e, e, g, e, g, g],
-	[g, g, gR, Li, e, e, g, f, g, e, e, g, e, e, g, g],
-	[g, g, g, gR, Li, e, g, g, e, e, g, e, e, g, g, g],
-	[g, g, g, g, gR, Li, e, e, e, g, e, e, g, g, g, g],
-	[g, g, g, g, g, e, e, e, e, e, e, g, g, g, g, g],
-	[g, g, g, g, g, j, g, g, g, g, g, g, g, g, g, g],
-	[g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-	[g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-];
-
-// const field = [ 	//7-2
+// const field = [ //6-5
 // 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
-// 	[g , e , e , e , e , e , e , e , e , e , e , e , e , e , e , g],
-// 	[g , e , e , e , g , g , g , g , g , g , g , g , e , e , e , g],
-// 	[g , e , e , g , g , g , g , g , g , g , g , g , g , e , e , g],
-// 	[g , e , g , g , g , g , e , e , e , e , e , g , g , g , e , g],
-// 	[g , e , g , g , e , e , e , e , e , e , e , g , g , g , e , g],
-// 	[g , e , g , g , e , e , e , e , f , e , e , g , g , g , e , g],
-// 	[g , e , g , g , g , e , e , e , iR,LiR,LiR,Lg , g , g , e , g],
-// 	[g , e , g , g , g , g , p , e , e , e , g , g , g , g , e , g],
-// 	[g , e , g , g , g , g , g , e , g , i , g , g , g , g , e , g],
-// 	[g , e , g , g , g , f , e , e , e , i , e , f , g , g , e , g],
-// 	[g , e , e , g , g , g , g , g , g , g , g , g , g , e , e , g],
-// 	[g , e , e , e , g , g , g , g , g , g , g , g , e , e , e , g],
-// 	[g , e , e , e , e , e , e , e , e , e , e , e , e , e , e , g],
+// 	[g , g , g , g , g , e , e , e , e , e , e , e , g , g , g , g],
+// 	[g , g , g , g , e , e , e , p , e , e , e , e , e , g , g , g],
+// 	[g , g , g , e , e , g , g , g , g , g , g , e , e , e , g , g],
+// 	[g , g , e , e , g , e , e , e , e , e , e , g , e , e , g , g],
+// 	[g , g , e , iR,LiR,LiR,Li , e , g , e , e , e , g , e , g , g],
+// 	[g , g , gR,Li , e , e , g , f , g , e , e , g , e , e , g , g],
+// 	[g , g , g , gR,Li , e , g , g , e , e , g , e , e , g , g , g],
+// 	[g , g , g , g , gR,Li , e , e , e , g , e , e , g , g , g , g],
+// 	[g , g , g , g , g , e , e , e , e , e , e , g , g , g , g , g],
+// 	[g , g , g , g , g , j , g , g , g , g , g , g , g , g , g , g],
+// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+// 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
 // ];
+
+const field = [ 	//7-2
+	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
+	[g , e , e , e , e , e , e , e , e , e , e , e , e , e , e , g],
+	[g , e , e , e , g , g , g , g , g , g , g , g , e , e , e , g],
+	[g , e , e , g , g , g , g , g , g , g , g , g , g , e , e , g],
+	[g , e , g , g , g , g , e , e , e , e , e , g , g , g , e , g],
+	[g , e , g , g , e , e , e , e , e , e , e , g , g , g , e , g],
+	[g , e , g , g , e , e , e , e , f , e , e , g , g , g , e , g],
+	[g , e , g , g , g , e , e , e , iR,LiR,LiR,Lg , g , g , e , g],
+	[g , e , g , g , g , g , p , e , e , e , g , g , g , g , e , g],
+	[g , e , g , g , g , g , g , e , g , i , g , g , g , g , e , g],
+	[g , e , g , g , g , f , e , e , e , i , e , f , g , g , e , g],
+	[g , e , e , g , g , g , g , g , g , g , g , g , g , e , e , g],
+	[g , e , e , e , g , g , g , g , g , g , g , g , e , e , e , g],
+	[g , e , e , e , e , e , e , e , e , e , e , e , e , e , e , g],
+];
 
 // const field = [ 	//13-1
 // 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
@@ -464,11 +477,34 @@ const field = [ //6-5
 // 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
 // 	[g , g , g , g , g , g , g , g , g , g , g , g , g , g , g , g],
 // ];
-
+const musicByLevels = {
+	1: "7 - World 1 (Ice Rock Island).mp3",
+	2: "8 - World 2 (Cobalt Mine).mp3",
+	3: "9 - World 3 (Golden Castle).mp3",
+	4: "10 - World 4 (Big Tree).mp3",
+	5: "11 - World 5 (Star Field).mp3",
+	6: "12 - World 6 (Earth Temple).mp3",
+	7: "13 - World 7 (Farthest Lake).mp3",
+	8: "14 - World 8 (Bone Canyon).mp3",
+	9: "15 - World 9 (Volcano).mp3",
+	10: "16 - Labyrinth Theme.mp3"
+};
+const sfxByType = {
+	"iceCreate": "SFX 37.mp3",
+	"iceCantCreate": "sfx 43.mp3",
+	"iceMelt": "SFX 38.mp3",
+	"iceFelt": "SFX 45.mp3",
+	"PSHHH": "SFX 48.mp3",
+	"push": "SFX 39.mp3",
+	"jump": "SFX 40.mp3",
+	"fall": "SFX 41.mp3",
+	"land": "SFX 45.mp3"
+};
 const canvas = document.getElementById('game');
-canvas.width = canvas.height = window.innerHeight - window.innerHeight % field[0].length;
+canvas.width = canvas.height = window.innerHeight - 30;
 canvas.style.display = "block";
-canvas.style.margin = "0 auto"
+canvas.style.marginLeft = "30px";
+canvas.style.alignSelf="center"
 const ctx = canvas.getContext('2d');
 
 const blockSize = canvas.height / field[0].length;
@@ -498,7 +534,7 @@ const engine = new Engine(5, squaresToAnimate);
 let fallMustGoOn = null; //these two are used in a lifecycle
 let slideMustGoOn = null; //to control moving blocks while still animating the neighbourhood
 
-let lvl = 9; //governs over 10 tile presets, and who knows, for choosing the very lvl, someday? %)
+const lvl = 10; //governs over 10 tile presets, and who knows, for choosing the very lvl, someday? %)
 let mainIterator;
 let keypressed;
 let kbIgnore = false;
@@ -510,15 +546,22 @@ const Initializer = function () {
 	engine.timeStart = Date.now(); //for a displayed timer, to see how long you take to get past the current level
 	engine.timeAnim = engine.timeStart; //time of the last frame rendered, used for animation throttling in couple with msecPerFrame via rAF, see main()
 	main();
-}
+}	//Initializer
 
-window.onload = Initializer;
+const bgMusic = document.createElement('audio');
+bgMusic.src=`./sound/${musicByLevels[lvl]}`
+bgMusic.volume=0.8;
+bgMusic.loop=true;
+console.log(bgMusic.src);
+
 //////////////////////////////
 //	>>>>	THE		<<<<<	//
 //	>>>>	ENTRY	<<<<<	//
 //	>>>>	POINT	<<<<<	//
 //////////////////////////////
+window.onload = Initializer;
 function main() {
+	bgMusic.play();
 	mainIterator = window.requestAnimationFrame(main);
 	engine.timeNow = Date.now();
 	let timeElapsed = engine.timeNow - engine.timeAnim;
@@ -748,7 +791,7 @@ function gravity() {
 
 	if (fallMustGoOn.frames--) { //smth false
 		for (let i = colStart; i <= colEnd; i++) {
-			ctx.drawImage(mapObjects, 0, (lvl - 1) * 16, 16, 16, i * blockSize, row * blockSize, blockSize, blockSize);
+			ctx.drawImage(mapObjects, 0.2, (lvl - 1) * 16, 16, 16, i * blockSize, row * blockSize, blockSize, blockSize+0.7);
 			switch (field[row][i]) {
 				case 'ice':
 					ctx.drawImage(mapObjects, 0, 160, 16, 16, i * blockSize, (row + (15 - fallMustGoOn.frames) / 15) * blockSize, blockSize, blockSize);
@@ -777,7 +820,7 @@ function gravity() {
 					ctx.drawImage(mapObjects, 80, 160, 16, 16, i * blockSize, (row + (15 - fallMustGoOn.frames) / 15) * blockSize, blockSize, blockSize);
 					break;
 				case 'fire':
-					ctx.drawImage(mapObjects, 160 + (lvl - 1) * 32, 16 * engine.frame, 16, 16.1,
+					ctx.drawImage(mapObjects, 160.5 + (lvl - 1) * 32, 16 * engine.frame, 16, 16.1,
 						i * blockSize, (row + (15 - fallMustGoOn.frames) / 15) * blockSize, blockSize, blockSize);
 					break;
 				default:
@@ -883,14 +926,14 @@ function gravity() {
 } // gravity()
 
 function drawSquare(row, column) {
-	ctx.drawImage(mapObjects, 0, (lvl - 1) * 16, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize); // always a background image to place an element upon
+	ctx.drawImage(mapObjects, 0, (lvl - 1) * 16, 15.7, 15.7, column * blockSize, row * blockSize, blockSize, blockSize); // always a background image to place an element upon
 	switch (field[row][column]) {
 		case 'ground':
 			drawGround(row, column);
 			break;
 		case '+ground':
 			if (field[row][column + 1] == 'ground' || field[row][column + 1] == 'ground+') //someday, i'm gonna master photoshop
-				ctx.drawImage(mapObjects, 80, (lvl - 1) * 16, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize);
+				ctx.drawImage(mapObjects, 79.5, (lvl - 1) * 16, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize);
 			else {
 				ctx.drawImage(mapObjects, 16, (lvl - 1) * 16, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize);
 				ctx.drawImage(mapObjects, 112, (lvl - 1) * 16, 8, 16, column * blockSize, row * blockSize, Math.floor(blockSize / 2), blockSize);
@@ -901,7 +944,7 @@ function drawSquare(row, column) {
 			break;
 		case 'ground+':
 			if (field[row][column - 1] == 'ground' || field[row][column - 1] == '+ground')
-				ctx.drawImage(mapObjects, 96, (lvl - 1) * 16, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize);
+				ctx.drawImage(mapObjects, 95.5, (lvl - 1) * 16, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize);
 			else { //to dirty tricks like this
 				ctx.drawImage(mapObjects, 16, (lvl - 1) * 16, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize);
 				ctx.drawImage(mapObjects, 120, (lvl - 1) * 16, 8, 16, Math.round((column + 0.5) * blockSize), row * blockSize, Math.round(blockSize / 2), blockSize);
@@ -914,7 +957,7 @@ function drawSquare(row, column) {
 			ctx.drawImage(mapObjects, 16, engine.frame % 5 ? 176 : 160, 16.1, 16, column * blockSize, row * blockSize, blockSize, blockSize);
 			break;
 		case '+ice+':
-			ctx.drawImage(mapObjects, 32, engine.frame % 5 ? 176 : 160, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize);
+			ctx.drawImage(mapObjects, 32, engine.frame % 5 ? 176 : 160, 16, 16, column * blockSize, row * blockSize, blockSize+1.6, blockSize);
 			break;
 		case '+ice':
 			ctx.drawImage(mapObjects, 47.9, engine.frame % 5 ? 176 : 160, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize);
@@ -962,7 +1005,7 @@ function drawSquare(row, column) {
 			ctx.drawImage(mapObjects, 152, 16 * (1 + engine.frame), 8, 16, (column + 0.5) * blockSize, row * blockSize, blockSize / 2, blockSize);
 			break;
 		case 'fire':
-			ctx.drawImage(mapObjects, 160 + (lvl - 1) * 32, 16 * engine.frame, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize);
+			ctx.drawImage(mapObjects, 160.5 + (lvl - 1) * 32, 16 * engine.frame, 16, 15.7, column * blockSize, row * blockSize, blockSize, blockSize);
 			break;
 		default:
 			true; //illegal objects are persecuted by irrendering
@@ -974,14 +1017,14 @@ function drawGround(row, column) {
 	let lSide = field[row][column - 1];
 	let rSide = field[row][column + 1];
 	if (lSide != 'ground' && lSide != '+ground') {
-		xOffset = 32; //left edge
+		xOffset = 31.5; //left edge
 		if (rSide != 'ground' && rSide != 'ground+')
 			xOffset = 16; //a standaloner
 	} else {
 		if (rSide != 'ground' && rSide != 'ground+')
 			xOffset = 63.5; //right edge
 	}
-	ctx.drawImage(mapObjects, xOffset, (lvl - 1) * 16, 16, 16, column * blockSize, row * blockSize, blockSize, blockSize);
+	ctx.drawImage(mapObjects, xOffset, (lvl - 1) * 16, 16.1, 16, column * blockSize, row * blockSize, blockSize, blockSize);
 } //drawGround()
 
 function slide() {
@@ -1071,12 +1114,11 @@ function slide() {
 
 function extinguish(row, col) {
 	destroyAnim(row, col);
-	//playSFX('extinguish');
+	createSfx("PSHHH");
 } //destroy()
 
 function destroyAnim(row, col) {
 	drawSquare(row, col);
-	//should go like this: pshhh!
 } //destroyAnim()
 
 function iceMagic(row, column) { //this function mostly relies on working with strings
@@ -1099,12 +1141,14 @@ function iceMagic(row, column) { //this function mostly relies on working with s
 				drawSquare(row, column + 1);
 			}
 			engine.squaresToAnimate.push([row, column]);
+			createSfx("iceCreate");
 			break;
 
 		case 'ice':
 			engine.squaresToAnimate.splice(findIndexOf(row, column), 1);
 			field[row][column] = 'empty';
 			drawSquare(row, column);
+			createSfx("iceMelt");
 			fieldUpdate(row - 1);
 			break;
 		case '+ice':
@@ -1113,6 +1157,7 @@ function iceMagic(row, column) { //this function mostly relies on working with s
 			field[row][column - 1] = field[row][column - 1].slice(0, -1);
 			drawSquare(row, column);
 			drawSquare(row, column - 1);
+			createSfx("iceMelt");
 			fieldUpdate(row);
 			break;
 		case '+ice+':
@@ -1123,6 +1168,7 @@ function iceMagic(row, column) { //this function mostly relies on working with s
 			drawSquare(row, column);
 			drawSquare(row, column - 1);
 			drawSquare(row, column + 1);
+			createSfx("iceMelt");
 			fieldUpdate(row);
 			break;
 		case 'ice+':
@@ -1131,25 +1177,25 @@ function iceMagic(row, column) { //this function mostly relies on working with s
 			field[row][column + 1] = field[row][column + 1].slice(1);
 			drawSquare(row, column);
 			drawSquare(row, column + 1);
+			createSfx("iceMelt");
 			fieldUpdate(row);
 			break;
 		default:
-			1; //playSFX('spell-failed');
+		createSfx("iceCantCreate");	
 	}
 
 } //iceMagic()
 
-function createArray(length) {
-	let arr = new Array(length || 0),
-		i = length;
+// function createArray(length) {
+// 	let arr = new Array(length || 0),
+// 		i = length;
 
-	if (arguments.length > 1) {
-		let args = Array.prototype.slice.call(arguments, 1);
-		while (i--) arr[length - 1 - i] = createArray.apply(this, args);
-	}
-
-	return arr;
-} //createArray()
+// 	if (arguments.length > 1) {
+// 		let args = Array.prototype.slice.call(arguments, 1);
+// 		while (i--) arr[length - 1 - i] = createArray.apply(this, args);
+// 	}
+// 	return arr;
+// } //createArray()
 
 function findIndexOf(row, column) {
 	for (let i = 0; i < engine.squaresToAnimate.length; i++) {
@@ -1161,3 +1207,11 @@ function findIndexOf(row, column) {
 function drawTimer() {
 
 } //drawTimer()
+
+function createSfx(type) {
+	const sfx = document.createElement("audio");
+	sfx.src=`./sound/${sfxByType[type]}`;
+	sfx.onended=()=>{delete sfx;}
+	sfx.play();
+	return sfx;
+}
